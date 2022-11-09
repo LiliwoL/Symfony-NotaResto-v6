@@ -1,0 +1,51 @@
+version: '3'
+
+services:
+
+  # MariaDB
+  database:
+    image: 'mariadb:10.7'
+    container_name: ${CONTAINER_NAME}_db
+    ports:
+      - '3366:3306'
+    environment:
+      - MARIADB_ROOT_PASSWORD=root
+      - MARIADB_DATABASE=${DB_USER}
+      - MARIADB_USER=${DB_USER}
+      - MARIADB_PASSWORD=${DB_USER}
+    volumes:
+      - './DATA:/var/lib/mysql'
+    networks:
+      mynet: {}
+
+  # PHPMyAdmin
+  phpmyadmin:
+    image: phpmyadmin
+    container_name: ${CONTAINER_NAME}_phpmyadmin
+    restart: always
+    environment:
+      - PMA_HOST=database
+      - PMA_PORT=3366
+      - PMA_USER=${DB_USER}
+      - PMA_PASSWORD=${DB_USER}
+    ports:
+      - 8081:80
+    networks:
+      mynet: { }
+
+
+  # MailHog
+  mailhog:
+    image: mailhog/mailhog
+    restart: always
+    container_name: ${CONTAINER_NAME}_mailhog
+    ports:
+      - '1025:1025'
+      - '8025:8025'
+    networks:
+      mynet: { }
+
+networks:
+  mynet:
+    driver: bridge
+    name: ${NETWORK_NAME}
