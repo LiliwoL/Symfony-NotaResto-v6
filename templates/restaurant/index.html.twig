@@ -1,0 +1,48 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Liste des restaurants{% endblock %}
+
+{% block body %}
+    <div class="container mt-3">
+        <div class="row">
+            <div class="col">
+
+                <table class="table">
+
+                    <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Le restaurant</th>
+                        <th>Localité</th>
+                        <th>Note</th>
+                        <th></th>
+                    </tr>
+                    </thead>
+
+                    <tbody>
+
+                    {% for restaurant in restaurants %}
+                        <tr>
+                            <td>{{ restaurant.id }}</td>
+                            <td>
+                                {{ restaurant.name }}
+                                <small>{{ restaurant.description }}</small>
+                            </td>
+                            <td>{{ restaurant.city.zipcode }} {{ restaurant.city.name }}</td>
+                            <td>{{ restaurant.averageRating | number_format(2, ',') }}</td>
+                            <td>
+                                <a href="{{ path("restaurant_show", {restaurant: restaurant.id}) }}">Voir</a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+                {{ knp_pagination_render(restaurants) }}
+
+            </div>
+        </div>
+    </div>
+{% endblock %}
